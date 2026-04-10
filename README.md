@@ -5,7 +5,7 @@ A personal knowledge base for deep reference documents. Each block is a detailed
 **Features:**
 - Dark/light theme with system preference detection
 - "Share with Claude" button exports structured markdown for AI conversations
-- Interactive knowledge graph with d3-force layout
+- Interactive knowledge graph with d3-force layout, inspiration from [uorb_graph](https://docs.px4.io/main/en/middleware/uorb_graph#uorb-publication-subscription-graph)
 - Responsive design with manga-inspired aesthetic
 - Claude Code skill (`/knowledge-block`) to automate block creation from URLs or files
 
