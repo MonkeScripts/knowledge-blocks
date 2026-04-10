@@ -1,0 +1,204 @@
+<div class="hero">
+  <h1>Knowledge Blocks<br>Getting Started Guide</h1>
+  <div class="subtitle">// how to create, structure, and use knowledge blocks</div>
+</div>
+
+<div class="container">
+
+<div class="nav">
+  <a href="#what">what are blocks</a>
+  <a href="#structure">html structure</a>
+  <a href="#skill">claude code skill</a>
+  <a href="#usecases">use cases</a>
+</div>
+
+<div class="section" id="what">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>What Are Knowledge Blocks</h2>
+  </div>
+  <p class="prose">A knowledge block is a <strong>deep reference document on one specific topic</strong>. It is NOT a skills chart, proficiency list, or shallow overview. A block is something you open, read the full writeup, check related sources, and use in future projects. Think of it as a <strong>personal wiki entry</strong>.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Good Block Topics</h4>
+      <p>Specific, referenceable: <code>Zenoh</code>, <code>CAN Bus Protocol</code>, <code>PX4 Offboard Control</code>, <code>Docker Multi-Stage Builds</code></p>
+    </div>
+    <div class="card">
+      <h4>Bad Block Topics</h4>
+      <p>Too broad or vague: <code>Embedded Protocols</code> (category), <code>Languages</code> (not a topic), <code>Skills Overview</code> (not a reference)</p>
+    </div>
+  </div>
+
+  <div class="tip"><strong>Tip:</strong> If you can't write at least 3 detailed sections about a topic, it's probably too narrow for a block. If you need more than 10 sections, consider splitting into multiple blocks.</div>
+</div>
+
+<div class="section" id="structure">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>HTML Structure</h2>
+  </div>
+  <p class="prose">Every guide resource file at <code>public/resources/{slug}.html</code> follows the same HTML class structure. The portfolio CSS handles all styling — <strong>never add inline styles or style tags</strong> to resource files.</p>
+
+  <p class="prose">Each block needs <strong>4 files</strong>:</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>1. Resource HTML</h4>
+      <p><code>public/resources/{slug}.html</code> — the full guide content using the CSS classes documented here</p>
+    </div>
+    <div class="card">
+      <h4>2. Entry Page</h4>
+      <p><code>blocks/{slug}.html</code> — minimal HTML that loads <code>block-detail.js</code> with a <code>data-block-slug</code> attribute</p>
+    </div>
+    <div class="card">
+      <h4>3. Data Entry</h4>
+      <p><code>src/shared/data.js</code> — add slug, title, icon, description, tags, and sources to the <code>knowledgeBlocks</code> array</p>
+    </div>
+    <div class="card">
+      <h4>4. Vite Config</h4>
+      <p><code>vite.config.js</code> — add <code>'block-{slug}': resolve(root, 'blocks/{slug}.html')</code> to rollup inputs</p>
+    </div>
+  </div>
+
+  <div class="cfg">
+    <div class="cfg-head">resource HTML skeleton</div>
+    <pre><span class="c">&lt;!-- Hero --&gt;</span>
+<span class="k">&lt;div class="hero"&gt;</span>
+  <span class="k">&lt;h1&gt;</span>Title<span class="k">&lt;br&gt;</span>Subtitle<span class="k">&lt;/h1&gt;</span>
+  <span class="k">&lt;div class="subtitle"&gt;</span><span class="s">// tagline</span><span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/div&gt;</span>
+
+<span class="k">&lt;div class="container"&gt;</span>
+
+  <span class="c">&lt;!-- Optional nav pills --&gt;</span>
+  <span class="k">&lt;div class="nav"&gt;</span>
+    <span class="k">&lt;a href="#section-id"&gt;</span>section name<span class="k">&lt;/a&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Sections --&gt;</span>
+  <span class="k">&lt;div class="section" id="section-id"&gt;</span>
+    <span class="k">&lt;div class="section-header"&gt;</span>
+      <span class="k">&lt;span class="section-number"&gt;</span><span class="n">01</span><span class="k">&lt;/span&gt;</span>
+      <span class="k">&lt;h2&gt;</span>Section Title<span class="k">&lt;/h2&gt;</span>
+    <span class="k">&lt;/div&gt;</span>
+    <span class="k">&lt;p class="prose"&gt;</span>Content here<span class="k">&lt;/p&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Divider before use cases --&gt;</span>
+  <span class="k">&lt;div class="divider"&gt;&lt;/div&gt;</span>
+
+  <span class="c">&lt;!-- Use cases --&gt;</span>
+  <span class="k">&lt;div class="section" id="usecases"&gt;</span>
+    ...
+  <span class="k">&lt;/div&gt;</span>
+
+<span class="k">&lt;/div&gt;</span></pre>
+  </div>
+
+  <details>
+    <summary>Example: data.js entry</summary>
+    <div class="cfg">
+      <div class="cfg-head">src/shared/data.js</div>
+      <pre>{
+  <span class="k">slug</span>: <span class="s">'docker-multistage'</span>,
+  <span class="k">title</span>: <span class="s">'Docker Multi-Stage Builds'</span>,
+  <span class="k">icon</span>: <span class="s">'🐳'</span>,
+  <span class="k">description</span>: <span class="s">'Optimize Docker images with multi-stage builds — smaller images, faster deploys'</span>,
+  <span class="k">tags</span>: [<span class="s">'docker'</span>, <span class="s">'devops'</span>, <span class="s">'optimization'</span>],
+  <span class="k">sources</span>: [
+    { <span class="k">title</span>: <span class="s">'Docker Docs'</span>, <span class="k">url</span>: <span class="s">'https://docs.docker.com/build/building/multi-stage/'</span> }
+  ]
+}</pre>
+    </div>
+  </details>
+</div>
+
+<div class="section" id="skill">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>Using the Claude Code Skill</h2>
+  </div>
+  <p class="prose">The fastest way to create blocks is with the <code>/knowledge-block</code> skill in Claude Code. Pass it a URL, file path, or raw text and it handles everything — reading the source, creating all 4 files, and verifying the build.</p>
+
+  <div class="cfg">
+    <div class="cfg-head">usage</div>
+    <pre><span class="c"># From a URL</span>
+<span class="k">/knowledge-block</span> <span class="s">https://docs.docker.com/build/building/multi-stage/</span>
+
+<span class="c"># From a local file</span>
+<span class="k">/knowledge-block</span> <span class="s">~/notes/can-bus-protocol.html</span>
+
+<span class="c"># The skill will:</span>
+<span class="c"># 1. Read the source data</span>
+<span class="c"># 2. Check for existing blocks on the same topic</span>
+<span class="c"># 3. Create new block OR suggest merging into existing</span>
+<span class="c"># 4. Run npm run build to verify</span></pre>
+  </div>
+
+  <div class="tip"><strong>Tip:</strong> The skill checks for duplicate topics automatically. If you pass Zenoh data and a Zenoh block already exists, it will suggest merging instead of creating a duplicate.</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section" id="usecases">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2>Use Cases</h2>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">🎓</div>
+      <div>
+        <div class="uc-title">Learning Journal</div>
+        <div class="uc-sub">education / self-study / reference</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t1">notes</span>
+        <span class="tag t4">learning</span>
+        <span class="tag t5">reference</span>
+      </div>
+      <p>Create blocks as you learn new topics. Each block becomes a permanent reference you can revisit and share. The "Share with Claude" button exports structured markdown you can paste into any AI conversation for context.</p>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">🛠️</div>
+      <div>
+        <div class="uc-title">Project Documentation</div>
+        <div class="uc-sub">engineering / architecture / decisions</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t3">docs</span>
+        <span class="tag t2">architecture</span>
+        <span class="tag t6">decisions</span>
+      </div>
+      <p>Document the technologies and patterns you use across projects. When you need to set up the same tool again, the block has your exact configuration and lessons learned.</p>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">🤝</div>
+      <div>
+        <div class="uc-title">Team Knowledge Sharing</div>
+        <div class="uc-sub">collaboration / onboarding / handoff</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t1">team</span>
+        <span class="tag t4">onboarding</span>
+      </div>
+      <p>Deploy your knowledge blocks as a static site. New team members can browse your reference documents to understand the tools and patterns your team uses.</p>
+    </div>
+  </div>
+</div>
+
+</div>

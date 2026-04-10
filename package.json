@@ -1,0 +1,14 @@
+{
+  "name": "knowledge-blocks",
+  "version": "1.0.0",
+  "description": "Personal knowledge base with deep reference documents, dark/light theme, and Claude Code integration",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.9.0"
+  }
+}
