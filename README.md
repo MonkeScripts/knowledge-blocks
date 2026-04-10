@@ -30,15 +30,16 @@ Open `http://localhost:3000` to see the block index.
 
 ## Creating Your First Block
 
-### Option A: Use the Claude Code Skill
+### Option A: Use the Claude Code Skill (Preferred
 
 If you have [Claude Code](https://claude.ai/code) installed:
 
 ```
-/knowledge-block https://docs.example.com/topic-you-want-to-document
+/knowledge-block https://docs.example.com/topic-you-want-to-document 
 ```
 
 The skill reads the source, creates all files, and verifies the build.
+> What I do: I ask claude questions and let it generate a html visual guide / artifact which I would then parse the path of the html into the skill.
 
 ### Option B: Manual
 
