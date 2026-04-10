@@ -5,8 +5,17 @@ A personal knowledge base for deep reference documents. Each block is a detailed
 **Features:**
 - Dark/light theme with system preference detection
 - "Share with Claude" button exports structured markdown for AI conversations
+- Interactive knowledge graph with d3-force layout
 - Responsive design with manga-inspired aesthetic
 - Claude Code skill (`/knowledge-block`) to automate block creation from URLs or files
+
+## Screenshots
+
+### Block Index
+![Block index grid view](images/Blocks.png)
+
+### Topic Graph
+![Interactive topic graph with connections](images/Topics.png)
 
 ## Quick Start
 

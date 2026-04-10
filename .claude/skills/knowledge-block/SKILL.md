@@ -24,7 +24,7 @@ The user will provide one or more of:
 - A Notion export or HTML file (read it)
 - Raw text or pasted content
 
-Read all provided sources. Understand what the topic is about and extract the key knowledge.
+Read all provided sources. Understand what the topic is about and extract the key knowledge. If uncertain on the level of detail the user wants, always ask for further clarification.
 
 ## Step 2 — Check existing blocks
 
