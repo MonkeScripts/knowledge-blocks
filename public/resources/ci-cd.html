@@ -1,0 +1,144 @@
+<div class="hero">
+  <h1>CI/CD<br>Pipelines</h1>
+  <div class="subtitle">// continuous integration and delivery with GitHub Actions</div>
+</div>
+
+<div class="container">
+
+<div class="nav">
+  <a href="#concepts">concepts</a>
+  <a href="#github-actions">github actions</a>
+  <a href="#strategies">deploy strategies</a>
+  <a href="#usecases">use cases</a>
+</div>
+
+<div class="section" id="concepts">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>Core Concepts</h2>
+  </div>
+  <p class="prose"><strong>Continuous Integration</strong> — every commit triggers automated build + test. Catch bugs at merge time, not in production. <strong>Continuous Delivery</strong> — every passing build is deployable. <strong>Continuous Deployment</strong> — every passing build deploys automatically. CI is table stakes; CD is the competitive advantage.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Pipeline</h4>
+      <p>Sequence of stages: checkout → install → lint → test → build → deploy. Each stage gates the next. Fail fast — lint before expensive tests.</p>
+    </div>
+    <div class="card">
+      <h4>Artifacts</h4>
+      <p>Build outputs (Docker images, binaries, bundles) stored in registries. Tagged with commit SHA for traceability. The deployable unit.</p>
+    </div>
+    <div class="card">
+      <h4>Environments</h4>
+      <p>Promotion chain: dev → staging → production. Each environment has its own config (secrets, URLs, feature flags). Staging mirrors prod.</p>
+    </div>
+    <div class="card">
+      <h4>Secrets</h4>
+      <p>API keys, tokens, certificates stored in CI system's secret store. Injected as environment variables at runtime. Never in code, never in logs.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="github-actions">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>GitHub Actions</h2>
+  </div>
+  <p class="prose">Workflow files in <code>.github/workflows/</code>. Triggered by events (push, PR, schedule, manual). Jobs run on GitHub-hosted or self-hosted runners. Steps execute commands or reusable actions from the marketplace.</p>
+
+  <div class="cfg">
+    <div class="cfg-head">.github/workflows/ci.yml</div>
+    <pre><span class="k">name:</span> <span class="s">CI</span>
+<span class="k">on:</span>
+  <span class="k">push:</span>
+    <span class="k">branches:</span> [<span class="s">main</span>]
+  <span class="k">pull_request:</span>
+
+<span class="k">jobs:</span>
+  <span class="k">build-and-test:</span>
+    <span class="k">runs-on:</span> <span class="s">ubuntu-latest</span>
+    <span class="k">steps:</span>
+    - <span class="k">uses:</span> <span class="s">actions/checkout@v4</span>
+    - <span class="k">uses:</span> <span class="s">actions/setup-node@v4</span>
+      <span class="k">with:</span>
+        <span class="k">node-version:</span> <span class="n">20</span>
+        <span class="k">cache:</span> <span class="s">npm</span>
+    - <span class="k">run:</span> <span class="s">npm ci</span>
+    - <span class="k">run:</span> <span class="s">npm test</span>
+    - <span class="k">run:</span> <span class="s">npm run build</span></pre>
+  </div>
+
+  <div class="tip"><strong>Tip:</strong> Cache dependencies between runs. <code>actions/setup-node</code> with <code>cache: npm</code> skips <code>npm ci</code> when lockfile unchanged — saves 30-60s per run.</div>
+</div>
+
+<div class="section" id="strategies">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>Deploy Strategies</h2>
+  </div>
+  <p class="prose">How you roll out changes determines your risk tolerance. Rolling updates are the default. Canary and blue-green give more control at the cost of complexity.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Rolling Update</h4>
+      <p>Replace instances gradually. Old and new versions coexist briefly. Simple, built into Kubernetes. Risk: breaking changes hit partial traffic.</p>
+    </div>
+    <div class="card">
+      <h4>Blue-Green</h4>
+      <p>Run two identical environments. Deploy to inactive (green), test, swap traffic. Instant rollback = swap back. Cost: double infrastructure.</p>
+    </div>
+    <div class="card">
+      <h4>Canary</h4>
+      <p>Route small percentage of traffic to new version. Monitor metrics. Gradually increase if healthy. Most controlled, most complex to implement.</p>
+    </div>
+    <div class="card">
+      <h4>Feature Flags</h4>
+      <p>Deploy code dark, enable features per user/group. Decouple deployment from release. Rollback = flip flag, no redeploy needed.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section" id="usecases">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2>Use Cases</h2>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">🚀</div>
+      <div>
+        <div class="uc-title">Docker Image Pipeline</div>
+        <div class="uc-sub">build / tag / push / deploy</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t1">docker</span>
+        <span class="tag t3">registry</span>
+      </div>
+      <p>CI builds Docker image on every push, tags with <code>sha-abc1234</code>, pushes to container registry. CD updates Kubernetes deployment manifest with new image tag. GitOps: ArgoCD watches the manifest repo and syncs automatically.</p>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">🧪</div>
+      <div>
+        <div class="uc-title">PR Preview Environments</div>
+        <div class="uc-sub">testing / review / collaboration</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t4">preview</span>
+        <span class="tag t5">review</span>
+      </div>
+      <p>Each pull request spins up a temporary environment with the branch deployed. Reviewers test the actual running app, not just read diffs. Environment destroyed on PR merge/close.</p>
+    </div>
+  </div>
+</div>
+
+</div>

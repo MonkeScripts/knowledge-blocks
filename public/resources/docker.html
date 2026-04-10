@@ -1,0 +1,130 @@
+<div class="hero">
+  <h1>Docker<br>Container Runtime</h1>
+  <div class="subtitle">// images, containers, volumes, and networking</div>
+</div>
+
+<div class="container">
+
+<div class="nav">
+  <a href="#core">core concepts</a>
+  <a href="#images">images &amp; builds</a>
+  <a href="#networking">networking</a>
+  <a href="#usecases">use cases</a>
+</div>
+
+<div class="section" id="core">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>Core Concepts</h2>
+  </div>
+  <p class="prose">Docker packages applications into <strong>containers</strong> — lightweight, isolated environments that share the host OS kernel. Unlike VMs, containers start in milliseconds and use minimal resources. The Docker daemon manages the container lifecycle: build, run, stop, remove.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Images</h4>
+      <p>Read-only templates built from Dockerfiles. Layered filesystem — each instruction creates a cacheable layer. Base images come from registries like Docker Hub.</p>
+    </div>
+    <div class="card">
+      <h4>Containers</h4>
+      <p>Running instances of images. Ephemeral by default — data disappears when container stops unless persisted to volumes or bind mounts.</p>
+    </div>
+    <div class="card">
+      <h4>Volumes</h4>
+      <p>Persistent storage managed by Docker. Survives container restarts. Named volumes for databases, bind mounts for development hot-reload.</p>
+    </div>
+    <div class="card">
+      <h4>Compose</h4>
+      <p>Multi-container orchestration via <code>docker-compose.yml</code>. Define services, networks, and volumes in one file. <code>docker compose up</code> starts everything.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="images">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>Images &amp; Multi-Stage Builds</h2>
+  </div>
+  <p class="prose">Multi-stage builds use multiple <code>FROM</code> statements to separate build dependencies from runtime. Build stage compiles code with full toolchain, final stage copies only the binary into a minimal base image. Result: images 10-100x smaller.</p>
+
+  <div class="cfg">
+    <div class="cfg-head">Dockerfile (multi-stage)</div>
+    <pre><span class="c"># Build stage</span>
+<span class="k">FROM</span> node:20-alpine <span class="k">AS</span> build
+<span class="k">WORKDIR</span> /app
+<span class="k">COPY</span> package*.json ./
+<span class="k">RUN</span> npm ci
+<span class="k">COPY</span> . .
+<span class="k">RUN</span> npm run build
+
+<span class="c"># Runtime stage</span>
+<span class="k">FROM</span> nginx:alpine
+<span class="k">COPY</span> --from=build /app/dist /usr/share/nginx/html
+<span class="k">EXPOSE</span> <span class="n">80</span></pre>
+  </div>
+
+  <div class="tip"><strong>Tip:</strong> Order Dockerfile instructions from least to most frequently changing. Package install before source copy — Docker caches unchanged layers.</div>
+</div>
+
+<div class="section" id="networking">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>Networking</h2>
+  </div>
+  <p class="prose">Docker creates isolated networks. Containers on the same network communicate by service name. Bridge network for single-host, overlay for Swarm/multi-host. Port mapping (<code>-p 8080:80</code>) exposes container ports to the host.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Bridge</h4>
+      <p>Default network. Containers get internal IPs, communicate via container name on same bridge. Good for local development.</p>
+    </div>
+    <div class="card">
+      <h4>Host</h4>
+      <p>Container shares host network stack directly. No port mapping needed. Maximum performance, no isolation.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section" id="usecases">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2>Use Cases</h2>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">🔧</div>
+      <div>
+        <div class="uc-title">Development Environment</div>
+        <div class="uc-sub">consistency / onboarding / isolation</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t1">devex</span>
+        <span class="tag t3">reproducibility</span>
+      </div>
+      <p>Compose file defines entire dev stack: app, database, cache, message queue. New team members run <code>docker compose up</code> and have identical environment in minutes.</p>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">📦</div>
+      <div>
+        <div class="uc-title">CI/CD Build Artifact</div>
+        <div class="uc-sub">pipelines / deployment / versioning</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t2">ci-cd</span>
+        <span class="tag t5">deploy</span>
+      </div>
+      <p>CI pipeline builds Docker image, tags with commit SHA, pushes to registry. Deployment pulls exact image version. Rollback = deploy previous tag. Image IS the artifact.</p>
+    </div>
+  </div>
+</div>
+
+</div>

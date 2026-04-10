@@ -1,0 +1,138 @@
+<div class="hero">
+  <h1>Kubernetes<br>Container Orchestration</h1>
+  <div class="subtitle">// pods, services, deployments, and scaling</div>
+</div>
+
+<div class="container">
+
+<div class="nav">
+  <a href="#architecture">architecture</a>
+  <a href="#workloads">workloads</a>
+  <a href="#networking">networking</a>
+  <a href="#usecases">use cases</a>
+</div>
+
+<div class="section" id="architecture">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>Architecture</h2>
+  </div>
+  <p class="prose">Kubernetes (K8s) is a <strong>container orchestration platform</strong> that automates deployment, scaling, and management of containerized applications. Declarative configuration — you describe desired state, K8s makes it happen. Control plane manages cluster state, worker nodes run containers.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Control Plane</h4>
+      <p>API server, etcd (state store), scheduler (assigns pods to nodes), controller manager (reconciliation loops). The brain of the cluster.</p>
+    </div>
+    <div class="card">
+      <h4>Worker Nodes</h4>
+      <p>Run <code>kubelet</code> (node agent), <code>kube-proxy</code> (networking), and container runtime (containerd/Docker). Where your pods actually execute.</p>
+    </div>
+    <div class="card">
+      <h4>kubectl</h4>
+      <p>CLI tool to interact with the cluster. <code>kubectl apply -f</code> submits manifests, <code>kubectl get pods</code> checks status. Essential daily driver.</p>
+    </div>
+    <div class="card">
+      <h4>Namespaces</h4>
+      <p>Virtual clusters within a cluster. Isolate teams, environments (dev/staging/prod), or applications. Resource quotas per namespace.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="workloads">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>Workloads</h2>
+  </div>
+  <p class="prose">Pods are the smallest deployable unit — one or more containers sharing network and storage. You rarely create pods directly. <strong>Deployments</strong> manage pod replicas with rolling updates and rollbacks. StatefulSets for databases, DaemonSets for per-node agents, Jobs for batch work.</p>
+
+  <div class="cfg">
+    <div class="cfg-head">deployment.yaml</div>
+    <pre><span class="k">apiVersion:</span> apps/v1
+<span class="k">kind:</span> Deployment
+<span class="k">metadata:</span>
+  <span class="k">name:</span> <span class="s">my-app</span>
+<span class="k">spec:</span>
+  <span class="k">replicas:</span> <span class="n">3</span>
+  <span class="k">selector:</span>
+    <span class="k">matchLabels:</span>
+      <span class="k">app:</span> <span class="s">my-app</span>
+  <span class="k">template:</span>
+    <span class="k">spec:</span>
+      <span class="k">containers:</span>
+      - <span class="k">name:</span> <span class="s">app</span>
+        <span class="k">image:</span> <span class="s">my-app:1.2.0</span>
+        <span class="k">ports:</span>
+        - <span class="k">containerPort:</span> <span class="n">8080</span>
+        <span class="k">resources:</span>
+          <span class="k">requests:</span>
+            <span class="k">memory:</span> <span class="s">"128Mi"</span>
+            <span class="k">cpu:</span> <span class="s">"250m"</span></pre>
+  </div>
+
+  <div class="tip"><strong>Tip:</strong> Always set resource requests and limits. Without them, a runaway pod can starve the entire node.</div>
+</div>
+
+<div class="section" id="networking">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>Services &amp; Networking</h2>
+  </div>
+  <p class="prose">Services provide stable network endpoints for pods. ClusterIP for internal traffic, NodePort for external access, LoadBalancer for cloud LBs. <strong>Ingress</strong> handles HTTP routing — hostname and path-based rules pointing to services.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>ClusterIP</h4>
+      <p>Default service type. Internal-only virtual IP. Other pods reach it by service name via cluster DNS.</p>
+    </div>
+    <div class="card">
+      <h4>Ingress</h4>
+      <p>HTTP/HTTPS routing layer. Map <code>api.example.com</code> to one service, <code>app.example.com</code> to another. TLS termination, path rewrites.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section" id="usecases">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2>Use Cases</h2>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">📈</div>
+      <div>
+        <div class="uc-title">Auto-Scaling Microservices</div>
+        <div class="uc-sub">scaling / resilience / load handling</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t1">scaling</span>
+        <span class="tag t4">microservices</span>
+      </div>
+      <p>Horizontal Pod Autoscaler watches CPU/memory metrics and adjusts replica count. Cluster Autoscaler adds/removes nodes. Handle traffic spikes without manual intervention.</p>
+    </div>
+  </div>
+
+  <div class="uc">
+    <div class="uc-head">
+      <div class="uc-icon">🔄</div>
+      <div>
+        <div class="uc-title">Zero-Downtime Deployments</div>
+        <div class="uc-sub">rolling updates / canary / blue-green</div>
+      </div>
+    </div>
+    <div class="uc-body">
+      <div class="tags">
+        <span class="tag t2">deploy</span>
+        <span class="tag t6">reliability</span>
+      </div>
+      <p>Rolling update strategy replaces pods incrementally. Readiness probes ensure new pods handle traffic before old ones terminate. Rollback with <code>kubectl rollout undo</code> if metrics degrade.</p>
+    </div>
+  </div>
+</div>
+
+</div>

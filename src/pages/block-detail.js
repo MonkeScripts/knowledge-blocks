@@ -2,6 +2,7 @@ import { PORTFOLIO_DATA } from '../shared/data.js';
 import { initTheme } from '../shared/theme.js';
 import { renderNav, initNavigation } from '../shared/navigation.js';
 import { renderFooter, initFooter } from '../shared/footer.js';
+import { getRelatedBlocks } from '../shared/graph.js';
 import '../styles/shared.css';
 import '../styles/block-detail.css';
 
@@ -166,7 +167,7 @@ async function renderBlockDetail(block) {
         <div class="block-detail-meta">
           ${block.tags && block.tags.length ? `
             <div class="block-detail-tags">
-              ${block.tags.map(t => `<span class="block-detail-tag">${t}</span>`).join('')}
+              ${block.tags.map(t => `<a href="../index.html?tag=${encodeURIComponent(t)}" class="block-detail-tag" data-tag="${t}">${t}</a>`).join('')}
             </div>
           ` : ''}
           ${block.sources && block.sources.length ? `
@@ -213,6 +214,37 @@ async function renderBlockDetail(block) {
       setTimeout(() => { e.target.textContent = 'Share with Claude'; }, 2000);
     });
   });
+
+  // Related blocks
+  const related = getRelatedBlocks(block.slug);
+  if (related.length > 0) {
+    const relatedSection = document.createElement('div');
+    relatedSection.className = 'block-related';
+    relatedSection.innerHTML = `
+      <div class="container">
+        <h3 class="block-related-heading">Connected Blocks</h3>
+        <div class="block-related-grid">
+          ${related.map(r => `
+            <a href="./${r.slug}.html" class="block-related-card">
+              <span class="block-related-icon">${r.icon}</span>
+              <div>
+                <span class="block-related-title">${r.title}</span>
+                <span class="block-related-desc">${r.description || ''}</span>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    // Insert before the guide or at end of detail section
+    const detailSection = main.querySelector('.block-detail-section');
+    const guideEl = main.querySelector('.block-guide');
+    if (guideEl) {
+      detailSection.insertBefore(relatedSection, guideEl);
+    } else {
+      detailSection.appendChild(relatedSection);
+    }
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

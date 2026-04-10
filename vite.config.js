@@ -17,6 +17,9 @@ export default defineConfig({
       input: {
         main: resolve(root, 'index.html'),
         'block-example': resolve(root, 'blocks/example.html'),
+        'block-docker': resolve(root, 'blocks/docker.html'),
+        'block-kubernetes': resolve(root, 'blocks/kubernetes.html'),
+        'block-ci-cd': resolve(root, 'blocks/ci-cd.html'),
       }
     }
   }

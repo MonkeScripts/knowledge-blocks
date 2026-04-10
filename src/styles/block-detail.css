@@ -567,4 +567,92 @@
     font-size: 0.65rem;
     padding: var(--space-1) var(--space-2);
   }
+
+  .block-related-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================
+   CONNECTED BLOCKS
+   ========================================== */
+
+.block-related {
+  padding: var(--space-6) 0;
+  border-top: 3px solid var(--color-border);
+  margin-top: var(--space-4);
+}
+
+.block-related-heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.block-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-3);
+}
+
+.block-related-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 3px solid var(--color-text);
+  box-shadow: 3px 3px 0 var(--color-text);
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease,
+              border-color var(--duration-fast) ease;
+}
+
+.block-related-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--color-text);
+  border-color: var(--color-primary);
+}
+
+.block-related-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.block-related-title {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+}
+
+.block-related-desc {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Clickable tags */
+.block-detail-tag {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: background var(--duration-fast) ease, color var(--duration-fast) ease,
+              border-color var(--duration-fast) ease;
+}
+
+.block-detail-tag:hover {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
 }
