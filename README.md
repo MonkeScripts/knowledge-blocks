@@ -33,7 +33,8 @@ The skill reads the source, creates all files, and verifies the build.
 
 ### Option B: Manual
 
-1. **Create the guide content** at `public/resources/my-topic.html` using the HTML class structure (see `public/resources/example.html` for the full template)
+1. **Create the guide content** at `public/resources/my-topic.html` using the HTML class structure (see `public/resources/example.html` for the full template). 
+CLAUDE ARTIFACTS ARE PERFECT FOR THIS!
 
 2. **Create the entry page** at `blocks/my-topic.html`:
 ```html
