@@ -16,6 +16,8 @@ A knowledge block is a **deep reference document on one specific topic**. It is 
 Examples of good block topics: "Zenoh", "CAN Bus Protocol", "PX4 Offboard Control", "Docker Multi-Stage Builds"
 Examples of bad block topics: "Embedded Protocols" (too broad), "Languages" (category, not a topic), "Skills Overview" (not a reference)
 
+Blocks are also nodes in a **topic graph** rendered on the index page. Edges come from an explicit `connections: ['other-slug', ...]` array on each block in `src/shared/data.js` (see `buildGraph` in `src/shared/graph.js`). Whenever you create a block that relates to existing topics, you MUST wire it into the graph — otherwise the new node will appear isolated.
+
 ## Step 1 — Read the source data
 
 The user will provide one or more of:
@@ -168,6 +170,7 @@ Tag color classes: `t1` (purple/primary), `t2` (light purple), `t3` (pink/accent
   icon: '{emoji}',
   description: '{one-line summary of what this block covers}',
   tags: ['{tag1}', '{tag2}', ...],
+  connections: ['{related-slug-1}', '{related-slug-2}'], // omit if no related blocks
   sources: [
     { title: '{source name}', url: '{url}' },
     ...
@@ -179,6 +182,7 @@ Tag color classes: `t1` (purple/primary), `t2` (light purple), `t3` (pink/accent
 - `icon`: single emoji that represents the topic
 - `description`: one sentence, specific, tells the reader what they'll learn
 - `tags`: 2-5 lowercase keywords for the topic
+- `connections`: slugs of existing blocks this topic is related to. Drives the topic graph on the index page. Omit the field entirely if there are no related blocks (do not use an empty array).
 - `sources`: include ALL original URLs the user provided, plus any key documentation links discovered during reading
 
 **4. Vite config** — add entry to `rollupOptions.input` in `vite.config.js`:
@@ -189,9 +193,12 @@ Tag color classes: `t1` (purple/primary), `t2` (light purple), `t3` (pink/accent
 
 ### 3b. New block that is related to an existing block
 
-Do everything in 3a, plus:
-- Tell the user which existing block is related and why
-- This is informational only — no code changes needed for "connecting" blocks. The user may choose to add cross-references in the writeup content later.
+Do everything in 3a, plus wire it into the topic graph:
+
+1. Tell the user which existing block(s) are related and why.
+2. On the **new** block's data entry, set `connections: ['related-slug', ...]` listing every related existing slug.
+3. The graph in `src/shared/graph.js` deduplicates edges by sorted slug pair, so a one-sided declaration is enough to draw the edge. Prefer declaring the connection on the new block only — leave existing blocks untouched unless the user explicitly asks to update them.
+4. Mention to the user that they can also add narrative cross-references inside the writeup HTML if they want.
 
 ### 3c. Add-on to an existing block
 
